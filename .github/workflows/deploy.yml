@@ -1,7 +1,6 @@
 name: Deploy to GitHub Pages
 
 on:
-  # 当推送到 main 分支时自动部署（你可以改成你的默认分支名）
   push:
     branches:
       - develop
@@ -25,6 +24,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    # 强制使用 Node.js 24，解决 actions 的 Node.js 20 弃用警告
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
@@ -52,3 +54,6 @@ jobs:
       - name: 部署到 GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # 自动启用 GitHub Pages（解决 "Get Pages site failed" 错误）
+          enablement: true
